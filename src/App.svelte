@@ -1,7 +1,8 @@
 <script>
-	import { letterText } from './stores';
+	import { letterText, paperPosition } from './stores';
     import Paper from './components/Paper.svelte'
     import Shredder from './components/Shredder.svelte'
+    import ShreddedPaper from './components/ShreddedPaper.svelte'
 
     let warp = false;
 
@@ -14,8 +15,16 @@
 <main>
     <textarea class="input-box" bind:value={$letterText}></textarea>
     <button on:click={toggleWarp}>Toggle Warp</button>
-	<Paper {warp} stripCount="6"></Paper>
-    <Shredder></Shredder>
+    <Shredder>
+        <div slot="top">
+            <Paper {warp}></Paper>
+        </div>
+        <div slot="bottom">
+            <ShreddedPaper {warp} stripCount="20"></ShreddedPaper>
+        </div>
+    </Shredder>
+
+    <input type="range" max="200" bind:value={$paperPosition} />
 </main>
 
 
@@ -38,10 +47,15 @@
     }
 
     :global(.svg-container) {
-        width: 1200px;
-        height: auto;
+        width: var(--pageWidth);
         max-width: 100%;
-	}
+        height: auto;
+    }
+    
+    :global(.page) {
+        position: relative;
+        padding-bottom: 100%;
+    }
 	
 	.input-box {
         width: 100%;
@@ -50,5 +64,11 @@
         color: var(--primary);
         background: transparent;
         border: 1px solid var(--primary);
+    }
+
+    [type=range] {
+        position: fixed;
+        top: 10px;
+        right: 10px;
     }
 </style>

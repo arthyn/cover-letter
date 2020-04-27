@@ -17,7 +17,7 @@
     const effect = Math.random() + .3;
     const multiplier = dir * effect;
     let params;
-    console.log(multiplier)
+    //console.log(multiplier)
 
     $: {
         params = {
@@ -45,9 +45,9 @@
     </clipPath>
     <g id={'strip-' + id} clip-path="url(#{'clip-' + id})">
         <rect class="strip" x="0" {y} {height} width={viewWidth} />
-        <!-- {#each $lines as line}
+        {#each $lines as line}
             <path d={line} />
-        {/each} -->
+        {/each}
     </g>
 </svg>
 {/if}
