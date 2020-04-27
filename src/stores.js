@@ -37,3 +37,12 @@ function breakIntoLines(font, text) {
 
     return lines;
 }
+
+let vibration = 0;
+export const vibrationRawValue = readable(0, set => {
+    const interval = setInterval(() => {
+        set(++vibration);
+    }, 50);
+
+    return () => clearInterval(interval);
+});
