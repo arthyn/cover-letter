@@ -1,5 +1,5 @@
 <script>
-	import { letterText, paperPosition } from './stores';
+    import { letterText, paperPosition, enableVibration } from './stores';
     import Paper from './components/Paper.svelte'
     import Shredder from './components/Shredder.svelte'
     import ShreddedPaper from './components/ShreddedPaper.svelte'
@@ -24,9 +24,17 @@
         </div>
     </Shredder>
 
-    <input type="range" max="200" bind:value={$paperPosition} />
+    <div class="controls">
+        <div>
+            <label for="paperPosition" class="text-white">Paper Position</label>
+            <input id="paperPosition" type="range" max="200" bind:value={$paperPosition} />
+        </div>
+        <div>
+            <input id="enableVibration" type="checkbox" bind:checked={$enableVibration} />
+            <label for="enableVibration" class="text-white">Enable Vibration</label>
+        </div>
+    </div>
 </main>
-
 
 <style lang="scss">
     main {
@@ -66,7 +74,7 @@
         border: 1px solid var(--primary);
     }
 
-    [type=range] {
+    .controls {
         position: fixed;
         top: 10px;
         right: 10px;

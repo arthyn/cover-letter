@@ -1,23 +1,19 @@
 <script>
     import { viewWidth, viewHeight } from '../settings'
-    import { paperPosition, vibrationRawValue } from '../stores'
+    import { paperPosition, vibrationRawValue, enableVibration } from '../stores'
 
     let topHeight = 50;
     let bottomHeight = 150;
     let edge = 2;
-    let outsideWidth = viewWidth - (2 * edge);
+    let outsideWidth = viewWidth - edge;
     let slotOffset = 50;
     let slotWidth = viewWidth - (2 * (edge + slotOffset))
-    let vibrations = false;
 
     function vibrateValue(raw) {
-        if (!vibrations)
-            return 0;
-
         console.log(raw)
         const dir = raw % 2 ? 1 : -1;
         const rotateValue = Math.random();
-        return dir * rotateValue;
+        return $enableVibration ? dir * rotateValue : 0;
     }
 
     function shred() {
@@ -30,7 +26,7 @@
         <slot name="top"></slot>
     </div>
     <!-- style="transform: rotate({vibrateValue($vibrationRawValue)}deg)" -->
-    <div class="shredder-body relative">
+    <div class="shredder-body relative" style="transform: rotate({vibrateValue($vibrationRawValue)}deg)">
         <svg class="shredder-top z-30" viewBox="0 0 {viewWidth} {topHeight}">
             <clipPath id="clip-shred-top">
                 <rect width={viewWidth} height={topHeight - 5} />
@@ -70,6 +66,8 @@
     .shredder {
         width: var(--pageWidth);
         margin-bottom: 100px;
+        -webkit-transform-style: preserve-3d;
+        transform-style: preserve-3d;
     }
 
     .shredder-top,

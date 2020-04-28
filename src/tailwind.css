@@ -1,0 +1,13 @@
+@tailwind base;
+
+:root {
+    --blue: #2634fc;
+    --white: #fff;
+    --bg: var(--blue);
+    --primary: var(--white);
+    --pageWidth: 1200px;
+}
+
+@tailwind components;
+
+@tailwind utilities;

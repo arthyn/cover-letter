@@ -38,6 +38,8 @@ function breakIntoLines(font, text) {
     return lines;
 }
 
+export const enableVibration = writable(false);
+
 let vibration = 0;
 export const vibrationRawValue = readable(0, set => {
     const interval = setInterval(() => {
