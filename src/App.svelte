@@ -1,8 +1,9 @@
 <script>
-    import { letterText, paperPosition, enableVibration } from './stores';
+    import { letterText, paperPosition, enableVibration } from './utils/stores';
     import Paper from './components/Paper.svelte'
     import Shredder from './components/Shredder.svelte'
     import ShreddedPaper from './components/ShreddedPaper.svelte'
+    import LetterGenerator from './components/LetterGenerator.svelte'
 
     let warp = false;
 
@@ -12,17 +13,21 @@
     }
 </script>
 
-<main>
-    <textarea class="input-box" bind:value={$letterText}></textarea>
-    <button on:click={toggleWarp}>Toggle Warp</button>
-    <Shredder>
-        <div slot="top">
-            <Paper {warp}></Paper>
-        </div>
-        <div slot="bottom">
-            <ShreddedPaper {warp} stripCount="20"></ShreddedPaper>
-        </div>
-    </Shredder>
+<main class="w-full min-h-screen">
+    <section class="flex flex-col justify-center items-center h-screen p-8 md:p-24">
+        <h1 class="text-4xl font-bold mb-12">Hi I'm Hunter Miller!<br>Welcome to my cover letter generator.</h1>
+        <LetterGenerator/>
+    </section>
+    <section class="flex flex-col items-center p-8 md:p-24">
+        <Shredder>
+            <div slot="top">
+                <Paper {warp}></Paper>
+            </div>
+            <div slot="bottom">
+                <ShreddedPaper {warp} stripCount="20"></ShreddedPaper>
+            </div>
+        </Shredder>
+    </section>
 
     <div class="controls">
         <div>
@@ -37,27 +42,14 @@
 </main>
 
 <style lang="scss">
-    main {
-        display: flex;
-        flex-flow: column;
-        align-items: center;
-        width: 100%;
-        min-height: 100vh;
-        padding: 2rem;
-
-        @media (min-width: 992px) {
-            padding: 6rem 10%;
-        }
-    }
-
-    button {
-        margin-bottom: 50px;
-    }
-
     :global(.svg-container) {
         width: var(--pageWidth);
-        max-width: 100%;
+        max-width: 560px;
         height: auto;
+
+        @media (min-width: 600px) {
+            max-width: 1200px;
+        } 
     }
     
     :global(.page) {

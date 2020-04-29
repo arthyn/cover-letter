@@ -9,4 +9,4 @@ export const textAreaWidth = viewWidth - (2 * innerMargin);
 
 export const pageHeight = viewHeight - (2 * outerMargin);
 
-export const fontSize = 24;
+export const fontSize = 21;

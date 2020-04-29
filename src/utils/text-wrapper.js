@@ -7,34 +7,63 @@ function getCharacterHeight(box) {
 }
 
 function getTextLine(testWords, maxCharacters) {
-    let words = testWords.slice();
-    let word = words.shift();
+    const newLineRegex = /(.*)([\n|\r]+)(.*)/;
+    let remainingWords = testWords.slice();
     let allowedWords = [];
-    let characterSum = word.length;
+    let characterSum = 0;
+    let insertNewLine = false;
+    let word, newLineMatch;
 
-    while (words.length > 0 && characterSum - 1 < maxCharacters) {
-        allowedWords.push(word);
-        word = words.shift();
+    while (remainingWords.length > 0 && characterSum - 1 < maxCharacters) {
+        debugger;
+        word = remainingWords.shift();
+        newLineMatch = word.match(newLineRegex);
+        if (newLineMatch) {
+            remainingWords.unshift(newLineMatch[3]);
+
+            if (newLineMatch[1].length + characterSum < maxCharacters) {
+                allowedWords.push(newLineMatch[1]);
+                if (newLineMatch[2].match(/[\n|\r\n]/g).length > 1) {
+                    insertNewLine = true;
+                }
+            } else {
+                remainingWords.unshift(newLineMatch[1] + newLineMatch[2]);
+            }
+            
+            break;
+        }
+
         characterSum += word.length + 1;
+
+        if (characterSum - 1 < maxCharacters) {
+            allowedWords.push(word);
+        } else {
+            remainingWords.unshift(word);
+        }
     }
 
     return {
         allowedWords,
-        remainingWords: words
+        remainingWords,
+        newLine: insertNewLine
     }
 }
 
 export function breakTextIntoLines(text, textAreaWidth, zeroBoundingBox) {
     const realWidth = getCharacterWidth(zeroBoundingBox) * 1.3;
     const maxCharacters = Math.floor(textAreaWidth / realWidth);
-    let words = text.split(' ');
-    let line;
+    let words = text.trim().split(' ');
+    let lineData;
     let lines = [];
 
     while (words.length > 0) {
-        line = getTextLine(words, maxCharacters);
-        lines.push(line.allowedWords.join(' '));
-        words = line.remainingWords;
+        lineData = getTextLine(words, maxCharacters);
+        lines.push(lineData.allowedWords.join(' '));
+        words = lineData.remainingWords;
+
+        if (lineData.newLine) {
+            lines.push(' ');
+        }
     }
 
     return lines;

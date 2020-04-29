@@ -5,9 +5,27 @@
     --white: #fff;
     --bg: var(--blue);
     --primary: var(--white);
-    --pageWidth: 1200px;
+    --pageWidth: 90vw;
+}
+
+@media screen and (min-width: 600px) {
+    /* :root {
+        --pageWidth: 60vw;
+    } */
 }
 
 @tailwind components;
+
+.control {
+    @apply border-white bg-transparent text-white;
+}
+
+.button {
+    @apply px-6 pt-1 pb-2 text-base leading-none tracking-widest lowercase font-bold border-2 rounded-sm transition duration-200 ease-in-out;
+}
+
+.button:hover {
+    @apply border-teal-400;
+}
 
 @tailwind utilities;

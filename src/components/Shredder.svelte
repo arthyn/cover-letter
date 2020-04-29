@@ -1,55 +1,83 @@
 <script>
-    import { viewWidth, viewHeight } from '../settings'
-    import { paperPosition, vibrationRawValue, enableVibration } from '../stores'
+    import { viewWidth, viewHeight } from '../utils/settings'
+    import { paperPosition, enableVibration, shredderElement, paperElement, shreddedPaperElement } from '../utils/stores'
 
     let topHeight = 50;
     let bottomHeight = 150;
-    let edge = 2;
+    let edge = 4;
     let outsideWidth = viewWidth - edge;
     let slotOffset = 50;
     let slotWidth = viewWidth - (2 * (edge + slotOffset))
 
     function vibrateValue(raw) {
-        console.log(raw)
         const dir = raw % 2 ? 1 : -1;
         const rotateValue = Math.random();
         return $enableVibration ? dir * rotateValue : 0;
     }
 
+    let paperAnimation;
+    const paperKeyframes = {
+        transform: ['translate3d(0, calc(0% + 8.33vw), 0)', 'translate3d(0, calc(250% + 8.33vw), 0)']
+    };
+
+    let shreddedAnimation;
+    const shreddedKeyframes = {
+        transform: ['translate3d(0, -100%, 0)', 'translate3d(0, 150%, 0)']
+    }
+
+    const shredAnimationOptions = {
+        duration: 2500,
+        easing: 'linear',
+        fill: 'forwards'
+    }
+
     function shred() {
-        paperPosition.set(150);
+        paperAnimation = $paperElement.animate(paperKeyframes, shredAnimationOptions);
+        shreddedAnimation = $shreddedPaperElement.animate(shreddedKeyframes, shredAnimationOptions);
+    }
+
+    function unshred() {
+        paperAnimation.reverse();
+        shreddedAnimation.reverse();
     }
 </script>
 
-<div class="shredder">
+
+<!-- style="transform: rotate({vibrateValue($vibrationRawValue)}deg)" -->
+<div class="shredder svg-container" bind:this={$shredderElement}>
     <div class="shredder-view shredder-view-top relative z-40">
         <slot name="top"></slot>
     </div>
-    <!-- style="transform: rotate({vibrateValue($vibrationRawValue)}deg)" -->
-    <div class="shredder-body relative" style="transform: rotate({vibrateValue($vibrationRawValue)}deg)">
-        <svg class="shredder-top z-30" viewBox="0 0 {viewWidth} {topHeight}">
+    <div class="shredder-backdrop z-0"></div>
+    <div class="shredder-top relative z-30">
+        <svg viewBox="0 2 {viewWidth} {topHeight}">
             <clipPath id="clip-shred-top">
-                <rect width={viewWidth} height={topHeight - 5} />
+                <rect y="2" width={viewWidth} height={topHeight + 2} />
             </clipPath>
             <g clip-path="url(#clip-shred-top)">
-                <rect class="bg edge-stroke" x="1" width={outsideWidth} height={topHeight} stroke-width={edge}/>
-                <line class="edge-stroke" x1={edge + slotOffset} y1={topHeight - 5} x2={edge + slotOffset + slotWidth} y2={topHeight - 5} stroke-width={edge} />
+                <rect class="bg edge-stroke" x="1" y="2" width={outsideWidth} height={topHeight + 2} stroke-width={edge}/>
+                <line class="edge-stroke" x1={(edge / 2) + slotOffset} y1={topHeight + 2} x2={edge + (edge / 2) + slotOffset + slotWidth} y2={topHeight + 2} stroke-width={edge} />
             </g>
         </svg>
-        <svg class="shredder-bottom z-20" viewBox="0 0 {viewWidth} {bottomHeight}">
+    </div>
+    <div class="shredder-bottom relative z-50">
+        <div class="shredder-controls absolute flex justify-between">
+            <button class="button control mr-4" on:click={unshred}>Unshred</button>
+            <button class="button control" on:click={shred}>Shred</button>
+        </div>
+        <svg class="shredder-bottom z-20" viewBox="0 2 {viewWidth} {bottomHeight}">
             <clipPath id="clip-shred-bottom">
-                <rect y="5" x="0" width={slotOffset + (2 * edge)} height={bottomHeight - 5} />
-                <rect x={slotOffset + edge} y="55" width={slotWidth} height={bottomHeight - 55} />
-                <rect y="5" x={slotOffset + slotWidth} width={slotOffset + (2 * edge)} height={bottomHeight - 5} />
+                <rect x="0" width={slotOffset + (2 * edge)} height={bottomHeight + 2} />
+                <rect x={slotOffset + edge} y="50" width={slotWidth} height={bottomHeight + 2 - 50}/>
+                <rect x={slotOffset + slotWidth} width={slotOffset + (2 * edge)} height={bottomHeight + 2} />
             </clipPath>
             <g clip-path="url(#clip-shred-bottom)">
-                <rect class="bg edge-stroke" x="1" width={outsideWidth} height={bottomHeight} stroke-width={edge}/>
-                <rect class="edge-stroke" x={slotOffset + edge} y="5" width={slotWidth} height="50" stroke-width={edge}/>
+                <rect class="bg edge-stroke" x="1" width={outsideWidth} height={bottomHeight + 1} stroke-width={edge}/>
+                <rect class="edge-stroke" x={slotOffset + edge} width={slotWidth} height="50" stroke-width={edge}/>
             </g>
         </svg>
-        <button class="z-50" on:click={shred}>Shred</button>
     </div>
-    <div class="shredder-view relative z-10">
+    <div class="shredder-view relative z-20">
         <slot name="bottom"></slot>
     </div>
 </div>
@@ -64,23 +92,15 @@
     }
 
     .shredder {
-        width: var(--pageWidth);
         margin-bottom: 100px;
         -webkit-transform-style: preserve-3d;
         transform-style: preserve-3d;
     }
 
-    .shredder-top,
-    .shredder-bottom {
+    .shredder-backdrop {
         position: absolute;
-    }
-
-    .shredder-top {
-        bottom: -5px;
-    }
-
-    .shredder-bottom {
-        top: -5px;
+        width: 100%;
+        height: calc(var(--pageWidth) / 12);
         background: #04094a;
     }
 
@@ -91,20 +111,11 @@
     }
 
     .shredder-view-top {
-        margin-bottom: -45px;
+        margin-bottom: calc(10px - (var(--pageWidth) / 12));
     }
 
-    .shredder-body {
-        transition: transform .05 ease;
-    }
-
-    button {
-        position: absolute;
+    .shredder-controls {
         right: 10px;
         bottom: 10px;
-        color: var(--primary);
-        background: var(--bg);
-        border: 1px solid var(--primary);
-        transform: translate3d(0,0,0)
     }
 </style>

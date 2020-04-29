@@ -1,9 +1,9 @@
 <script>
-    import { lines } from '../stores'
+    import { lines } from '../utils/stores'
     import { fly } from 'svelte/transition'
     import { quintIn, expoIn, elasticInOut } from 'svelte/easing'
-    import { applyTopWarp } from '../api'
-    import { pageWidth, viewWidth, viewHeight } from '../settings'
+    import { applyTopWarp } from '../utils/api'
+    import { pageWidth, viewWidth, viewHeight } from '../utils/settings'
 
     export let warp;
     export let x = 0;

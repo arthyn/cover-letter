@@ -2,13 +2,16 @@ import { fontSize, textAreaWidth, innerMargin } from './settings'
 import { writable, readable, derived } from 'svelte/store'
 import { tweened } from 'svelte/motion'
 import opentype from 'opentype.js'
-import { breakTextIntoLines, distributeLinesVertically } from './utils/text-wrapper'
+import { generateTemplateLetter } from './api'
+import { breakTextIntoLines, distributeLinesVertically } from './text-wrapper'
 
-export const paperPosition = tweened(0, {
-    duration: 2500
-});
+export const shredderElement = writable();
+export const paperElement = writable();
+export const shreddedPaperElement = writable();
 
-export const letterText = writable('Nori grape silver beet broccoli kombu beet greens fava bean potato quandong celery. Bunya nuts black-eyed pea prairie turnip leek lentil turnip greens parsnip. Sea lettuce lettuce water chestnut eggplant winter purslane fennel azuki bean earthnut pea sierra leone bologi leek soko chicory celtuce parsley jícama salsify.')
+export const paperPosition = writable(0);
+
+export const letterText = writable(generateTemplateLetter('Software Developer', 'Modern Digital'))
 
 export const lines = derived(letterText, ($letterText, set) => {
     opentype.load('FiraCode-Regular.ttf', (err, font) => {
@@ -40,11 +43,11 @@ function breakIntoLines(font, text) {
 
 export const enableVibration = writable(false);
 
-let vibration = 0;
-export const vibrationRawValue = readable(0, set => {
-    const interval = setInterval(() => {
-        set(++vibration);
-    }, 50);
+// let vibration = 0;
+// export const vibrationRawValue = readable(0, set => {
+//     const interval = setInterval(() => {
+//         set(++vibration);
+//     }, 50);
 
-    return () => clearInterval(interval);
-});
+//     return () => clearInterval(interval);
+// });
