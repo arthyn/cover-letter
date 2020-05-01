@@ -5,13 +5,6 @@
     --white: #fff;
     --bg: var(--blue);
     --primary: var(--white);
-    --pageWidth: 90vw;
-}
-
-@media screen and (min-width: 600px) {
-    /* :root {
-        --pageWidth: 60vw;
-    } */
 }
 
 @tailwind components;
@@ -21,11 +14,15 @@
 }
 
 .button {
-    @apply px-6 pt-1 pb-2 text-base leading-none tracking-widest lowercase font-bold border-2 rounded-sm transition duration-200 ease-in-out;
+    @apply px-6 pt-1 pb-2 text-base leading-none tracking-widest lowercase font-bold border-2 rounded-sm bg-white text-teal-500 transition duration-200 ease-in-out;
+}
+
+.button:focus {
+    @apply border-teal-200;
 }
 
 .button:hover {
-    @apply border-teal-400;
+    @apply border-teal-500;
 }
 
 @tailwind utilities;

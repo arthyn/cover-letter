@@ -1,9 +1,11 @@
 <script>
     import { letterText, paperPosition, enableVibration } from './utils/stores';
+    import { shredderWidth } from './utils/settings';
     import Paper from './components/Paper.svelte'
     import Shredder from './components/Shredder.svelte'
     import ShreddedPaper from './components/ShreddedPaper.svelte'
     import LetterGenerator from './components/LetterGenerator.svelte'
+    import ActualLetter from './components/ActualLetter.svelte'
 
     let warp = false;
 
@@ -13,10 +15,12 @@
     }
 </script>
 
-<main class="w-full min-h-screen">
+<main class="w-full min-h-screen" style="--pageWidth: {shredderWidth}vw">
     <section class="flex flex-col justify-center items-center h-screen p-8 md:p-24">
-        <h1 class="text-4xl font-bold mb-12">Hi I'm Hunter Miller!<br>Welcome to my cover letter generator.</h1>
-        <LetterGenerator/>
+        <div class="max-w-2xl w-full mx-auto">
+            <h1 class="mb-4 text-xl sm:text-4xl font-bold leading-none">Hi I'm Hunter Miller!</h1>
+            <LetterGenerator/>
+        </div>
     </section>
     <section class="flex flex-col items-center p-8 md:p-24">
         <Shredder>
@@ -28,8 +32,11 @@
             </div>
         </Shredder>
     </section>
+    <section class="flex flex-col items-center p-8 md:p-24">
+        <ActualLetter />
+    </section>
 
-    <div class="controls">
+    <div class="controls hidden">
         <div>
             <label for="paperPosition" class="text-white">Paper Position</label>
             <input id="paperPosition" type="range" max="200" bind:value={$paperPosition} />
@@ -48,7 +55,7 @@
         height: auto;
 
         @media (min-width: 600px) {
-            max-width: 1200px;
+            max-width: 1000px;
         } 
     }
     

@@ -1,8 +1,7 @@
 <script>
     import { generateTemplateLetter } from '../utils/api'
-    import { letterText, shredderElement } from '../utils/stores'
+    import { letterText, shredderElement, theirName } from '../utils/stores'
 
-    let name = '';
     let job = '';
     let company = '';
 
@@ -14,20 +13,45 @@
 
 </script>
 
-<form class="max-w-2xl w-full mx-auto text-xl" on:submit|preventDefault={generate}>
-    <div class="flex mb-10">
-        <label for="yourName" class="mr-8 font-bold">Your Name:</label>
-        <input id="yourName" class="control flex-1 py-1 px-2 border-b-2" type="text" bind:value={name}>
+<form class="text-2xl" on:submit|preventDefault={generate}>
+    <div class="leading-looser mb-8">
+        If you could introduce yourself as
+        <div class="relative inline leading-none">
+            <input id="yourName" class="control w-48 -mb-2 py-1 px-2 text-center border-b-2" type="text" required autofocus bind:value={$theirName}>
+            <label for="yourName" class="absolute left-0 inline-block w-full text-center font-semibold opacity-75">your name</label>
+        </div>, where you
+        <div class="relative inline leading-none">
+            <input id="company" class="control w-48 -mb-2 py-1 px-2 text-center border-b-2" type="text" required bind:value={company}>
+            <label for="company" class="absolute left-0 inline-block w-full text-center font-semibold opacity-75">work</label>
+        </div>, and
+        <div class="relative inline leading-none">
+            <input id="position" class="control w-60 -mb-2 py-1 px-2 text-center border-b-2" type="text" required bind:value={job}>
+            <label for="position" class="absolute left-0 inline-block w-full text-center font-semibold opacity-75">the position</label>
+        </div> you're hiring for, then we can move on to the letter. 
     </div>
-    <div class="flex mb-10">
-        <label for="position" class="mr-8 font-bold">Position You're Hiring:</label>
-        <input id="position" class="control flex-1 py-1 px-2 border-b-2" type="text" bind:value={job}>
-    </div>
-    <div class="flex mb-10">
-        <label for="company" class="mr-8 font-bold">Your Company Name:</label>
-        <input id="company" class="control flex-1 py-1 px-2 border-b-2" type="text" bind:value={company}>
-    </div>
-    <div class="flex justify-end">
-        <button class="button control">See the letter</button>
-    </div>
+    <button class="button control">See the letter</button>
 </form>
+
+<style lang="scss">
+    .leading-looser {
+        line-height: 2.25
+    }
+
+    input:invalid {
+        box-shadow: none !important;
+    }
+
+    input {
+        &:valid + label,
+        &:focus + label {
+            opacity: 1;
+            transform: translateY(calc(100% + .25rem)) scale(.7);
+        }
+    }
+
+    label {
+        top: .25rem;
+        transition: transform .2s;
+        cursor: pointer;
+    }
+</style>

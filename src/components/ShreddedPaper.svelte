@@ -27,7 +27,7 @@
     }
 </script>
 
-<section class="page svg-container" style="transform: translate3d(0, {$paperPosition - 100}%, 0) rotate(0.01deg)" bind:this={$shreddedPaperElement}>
+<section class="page svg-container" style="transform: translate3d(0, {$paperPosition - 100}%, 0)" bind:this={$shreddedPaperElement}>
     {#each strips as strip}
         <Strip {...strip} {warp}></Strip>
     {/each}

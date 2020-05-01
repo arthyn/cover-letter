@@ -1,13 +1,15 @@
 <script>
-    import { viewWidth, viewHeight } from '../utils/settings'
+    import { viewWidth, viewHeight, pageOuterMarginRatio } from '../utils/settings'
     import { paperPosition, enableVibration, shredderElement, paperElement, shreddedPaperElement } from '../utils/stores'
 
     let topHeight = 50;
     let bottomHeight = 150;
     let edge = 4;
+    let halfEdge = edge / 2;
     let outsideWidth = viewWidth - edge;
     let slotOffset = 50;
-    let slotWidth = viewWidth - (2 * (edge + slotOffset))
+    let slotHeight = 50;
+    let slotWidth = viewWidth - (2 * (edge + slotOffset));
 
     function vibrateValue(raw) {
         const dir = raw % 2 ? 1 : -1;
@@ -17,7 +19,7 @@
 
     let paperAnimation;
     const paperKeyframes = {
-        transform: ['translate3d(0, calc(0% + 8.33vw), 0)', 'translate3d(0, calc(250% + 8.33vw), 0)']
+        transform: [`translate3d(0, calc(0% + ${pageOuterMarginRatio}vw), 0)`, `translate3d(0, calc(250% + ${pageOuterMarginRatio}vw), 0)`]
     };
 
     let shreddedAnimation;
@@ -50,13 +52,13 @@
     </div>
     <div class="shredder-backdrop z-0"></div>
     <div class="shredder-top relative z-30">
-        <svg viewBox="0 2 {viewWidth} {topHeight}">
+        <svg viewBox="0 {halfEdge} {viewWidth} {topHeight}">
             <clipPath id="clip-shred-top">
-                <rect y="2" width={viewWidth} height={topHeight + 2} />
+                <rect y={halfEdge} width={viewWidth} height={topHeight + halfEdge} />
             </clipPath>
             <g clip-path="url(#clip-shred-top)">
-                <rect class="bg edge-stroke" x="1" y="2" width={outsideWidth} height={topHeight + 2} stroke-width={edge}/>
-                <line class="edge-stroke" x1={(edge / 2) + slotOffset} y1={topHeight + 2} x2={edge + (edge / 2) + slotOffset + slotWidth} y2={topHeight + 2} stroke-width={edge} />
+                <rect class="bg edge-stroke" x="1" y={halfEdge} width={outsideWidth} height={topHeight + halfEdge} stroke-width={edge}/>
+                <line class="edge-stroke" x1={halfEdge + slotOffset} y1={topHeight + halfEdge} x2={edge + halfEdge + slotOffset + slotWidth} y2={topHeight + halfEdge} stroke-width={edge} />
             </g>
         </svg>
     </div>
@@ -65,15 +67,15 @@
             <button class="button control mr-4" on:click={unshred}>Unshred</button>
             <button class="button control" on:click={shred}>Shred</button>
         </div>
-        <svg class="shredder-bottom z-20" viewBox="0 2 {viewWidth} {bottomHeight}">
+        <svg class="shredder-bottom z-20" viewBox="0 {halfEdge} {viewWidth} {bottomHeight}">
             <clipPath id="clip-shred-bottom">
-                <rect x="0" width={slotOffset + (2 * edge)} height={bottomHeight + 2} />
-                <rect x={slotOffset + edge} y="50" width={slotWidth} height={bottomHeight + 2 - 50}/>
-                <rect x={slotOffset + slotWidth} width={slotOffset + (2 * edge)} height={bottomHeight + 2} />
+                <rect width={slotOffset + (2 * edge)} height={bottomHeight + halfEdge} />
+                <rect x={slotOffset + edge} y={slotHeight - halfEdge} width={slotWidth} height={bottomHeight + edge - slotHeight}/>
+                <rect x={slotOffset + slotWidth} width={slotOffset + (2 * edge)} height={bottomHeight + halfEdge} />
             </clipPath>
             <g clip-path="url(#clip-shred-bottom)">
-                <rect class="bg edge-stroke" x="1" width={outsideWidth} height={bottomHeight + 1} stroke-width={edge}/>
-                <rect class="edge-stroke" x={slotOffset + edge} width={slotWidth} height="50" stroke-width={edge}/>
+                <rect class="bg edge-stroke" x="1" width={outsideWidth} height={bottomHeight + halfEdge} stroke-width={edge}/>
+                <rect class="edge-stroke" x={slotOffset + edge} width={slotWidth} height={slotHeight} stroke-width={edge}/>
             </g>
         </svg>
     </div>
@@ -82,7 +84,7 @@
     </div>
 </div>
 
-<style>
+<style lang="scss">
     .bg {
         fill: var(--bg);
     }
@@ -93,7 +95,6 @@
 
     .shredder {
         margin-bottom: 100px;
-        -webkit-transform-style: preserve-3d;
         transform-style: preserve-3d;
     }
 
@@ -116,6 +117,9 @@
 
     .shredder-controls {
         right: 10px;
-        bottom: 10px;
+        bottom: -50px;
+        @media (min-width: 768px) {
+            bottom: 10px;
+        }
     }
 </style>
