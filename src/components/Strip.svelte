@@ -38,28 +38,15 @@
 </script>
 
 {#if !transition}
-<!--  -->
-<svg class="strip-container svg-container" viewBox="0 0 {viewWidth} {viewHeight}" out:fly="{{ y: 1200, duration: 1000, easing: expoIn, opacity: 100 }}">
+<svg class="svg-container absolute top-0 left-0" viewBox="0 0 {viewWidth} {viewHeight}" out:fly="{{ y: 1200, duration: 1000, easing: expoIn, opacity: 100 }}">
     <clipPath id={'clip-' + id} use:applyTopWarp={params}>
         <rect {x} {y} {height} {width} />
     </clipPath>
     <g id={'strip-' + id} clip-path="url(#{'clip-' + id})">
-        <rect class="strip" x="0" {y} {height} width={viewWidth} />
+        <rect class="fill-current" x="0" {y} {height} width={viewWidth} />
         {#each $lines as line}
             <path d={line} />
         {/each}
     </g>
 </svg>
 {/if}
-
-<style>
-    .strip-container {
-        position: absolute;
-        top: 0;
-        left: 0;
-    }
-
-    .strip {
-        fill: #fff;
-    }
-</style>

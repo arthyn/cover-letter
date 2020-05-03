@@ -37,7 +37,7 @@
     $: offset = window.innerWidth * pageOuterMarginRatio / 100;
 
     const paperKeyframes = {
-        transform: [`translate3d(0, ${pageOuterMarginRatio}vw, 0)`, `translate3d(0, calc(100% + ${pageOuterMarginRatio}vw), 0)`] //`translate3d(0, calc(0% + ${pageOuterMarginRatio}vw), 0)`, 
+        transform: [`translate3d(0, calc(100% + ${pageOuterMarginRatio}vw), 0)`] //`translate3d(0, calc(0% + ${pageOuterMarginRatio}vw), 0)`, 
     }
 
     const shredKeyFrames = {

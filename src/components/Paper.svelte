@@ -8,7 +8,7 @@
 </script>
 
 <section class="page svg-container" class:opacity-50={debug} bind:this={$paperElement}>
-    <svg class="strip-container" viewBox="0 0 {viewWidth} {viewHeight}" use:applyTopWarp={warp}>
+    <svg class="absolute top-0 left-0" viewBox="0 0 {viewWidth} {viewHeight}" use:applyTopWarp={warp}>
         <rect fill="#fff" x={outerMargin} y={outerMargin} width={pageWidth} height={pageHeight} />
         {#each $lines as line}
             <path d={line} />
