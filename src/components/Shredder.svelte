@@ -60,7 +60,7 @@
     }
 
     const shredOptions = {
-        delay: mobile ? 5000 : 1000,
+        delay: mobile ? 3000 : 1000,
         duration: 7500,
         easing: 'linear',
         fill: 'forwards'
@@ -128,7 +128,7 @@
         const observer = new IntersectionObserver(entries => {
             intersecting = entries[0].isIntersecting;
             if (intersecting && !debug) {
-                setTimeout(scrollIntoView, 4000);
+                setTimeout(scrollIntoView, shredOptions.delay + (shredOptions.duration / 2));
                 runFullAnimation();
                 observer.unobserve(target);
             }

@@ -22,7 +22,7 @@
 
     function scrollToTop(node) {
         if (!debug)
-            setTimeout(() => container.scrollIntoView(true), 245);
+            setTimeout(() => container.scrollIntoView(true), 255);
     }
 
 </script>
@@ -48,7 +48,7 @@
     </section>
     {/if}
     {#if $status === statusTypes.letter || debug}
-        <section class="screen" use:scrollToTop in:fly={{...flyIn, delay: 245}}>
+        <section class="screen" use:scrollToTop in:fly={{...flyIn, delay: 250}}>
             <ActualLetter />
         </section>
     {/if}

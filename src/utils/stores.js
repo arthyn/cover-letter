@@ -1,6 +1,5 @@
-import { fontSize, textAreaWidth, innerMargin } from './settings'
-import { writable, readable, derived } from 'svelte/store'
-import { tweened } from 'svelte/motion'
+import { fontSize, textAreaWidth, innerMargin, debug } from './settings'
+import { writable, derived } from 'svelte/store'
 import opentype from 'opentype.js'
 import { generateTemplateLetter } from './api'
 import { breakTextIntoLines, distributeLinesVertically } from './text-wrapper'
@@ -13,7 +12,7 @@ export const statusTypes = {
 
 export const status = writable(statusTypes.intro);
 
-export const theirName = writable('Hunter');
+export const theirName = writable(debug ? 'Hunter' : '');
 
 export const shredderElement = writable();
 export const paperElement = writable();
