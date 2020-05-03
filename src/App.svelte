@@ -17,7 +17,7 @@
 
     function toggleWarp() {
         warp = !warp;
-        console.log('warp switching to', warp)
+        debug && console.log('warp switching to', warp)
     }
 
     function scrollToTop(node) {

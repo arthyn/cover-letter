@@ -8,9 +8,8 @@
 
     function generate() {
         $letterText = generateTemplateLetter(job || 'Software Developer', company || 'Modern Digital');
-        console.log($shredderElement);
+        debug && console.log($shredderElement);
         $status = statusTypes.shredder;
-        //$shredderElement.scrollIntoView({ behavior: 'smooth' });
     }
 
 </script>

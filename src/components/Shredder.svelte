@@ -72,8 +72,7 @@
             ...shredOptions,
             duration: paperDuration
         }
-        debugger;
-        console.log(getShreddedDistance() / shredOptions.duration, getPaperDistance() / paperDuration)
+        debug && console.log(getShreddedDistance() / shredOptions.duration, getPaperDistance() / paperDuration)
 
         paperAnimation = $paperElement.animate(paperKeyframes, paperOptions);
         shreddedAnimation = $shreddedPaperElement.animate(shredKeyFrames, shredOptions);
