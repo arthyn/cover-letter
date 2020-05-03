@@ -15,7 +15,6 @@ function getTextLine(testWords, maxCharacters) {
     let word, newLineMatch;
 
     while (remainingWords.length > 0 && characterSum - 1 < maxCharacters) {
-        debugger;
         word = remainingWords.shift();
         newLineMatch = word.match(newLineRegex);
         if (newLineMatch) {

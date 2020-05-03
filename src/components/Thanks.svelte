@@ -3,13 +3,28 @@
 
     let mask;
     let className;
-	export { className as class };
-
+    export { className as class };
+    
+    let container, intersecting;
     onMount(() => {
+        const observer = new IntersectionObserver(entries => {
+            intersecting = entries[0].isIntersecting;
+            if (intersecting) {
+                runWritingAnimation();
+                observer.unobserve(container);
+            }
+        }, {
+            threshold: .5
+        });
+
+        observer.observe(container);
+    })
+
+    function runWritingAnimation() {
         const paths = Array.from(mask.querySelectorAll('path'));
         let delay = 0;
         paths.forEach(path => delay = animateWriting(path, delay));
-    })
+    }
 
     function animateWriting(path, delay) {
         setTimeout(() => {
@@ -30,7 +45,7 @@
     }
 </script>
 
-<svg class={className} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 200">
+<svg class={className} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 200" bind:this={container}>
     <title>Thanks!</title>
     <mask id="writing-strokes" maskUnits="userSpaceOnUse" bind:this={mask}>
         <path class="reg-stroke cls-2" d="M43.34,58.16c16.73-4.57,34.42-3.81,51.59-6.29s34-8.15,51.1-6.14"/>

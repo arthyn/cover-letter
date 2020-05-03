@@ -5,7 +5,15 @@ import opentype from 'opentype.js'
 import { generateTemplateLetter } from './api'
 import { breakTextIntoLines, distributeLinesVertically } from './text-wrapper'
 
-export const theirName = writable('');
+export const statusTypes = {
+    intro: 'intro',
+    shredder: 'shredder',
+    letter: 'letter'
+}
+
+export const status = writable(statusTypes.intro);
+
+export const theirName = writable('Hunter');
 
 export const shredderElement = writable();
 export const paperElement = writable();

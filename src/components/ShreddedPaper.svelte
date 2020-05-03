@@ -2,7 +2,7 @@
     import Strip from './Strip.svelte'
     import { applyTopWarp } from '../utils/api'
     import { paperPosition, shreddedPaperElement } from '../utils/stores'
-    import { pageHeight, pageWidth, outerMargin, viewWidth, viewHeight } from '../utils/settings'
+    import { pageHeight, pageWidth, outerMargin, viewWidth, viewHeight, shredderWidth } from '../utils/settings'
 
     export let warp;
     export let stripCount = 5;
@@ -27,8 +27,18 @@
     }
 </script>
 
-<section class="page svg-container" style="transform: translate3d(0, {$paperPosition - 100}%, 0)" bind:this={$shreddedPaperElement}>
+<section class="page svg-container" style="" bind:this={$shreddedPaperElement}>
     {#each strips as strip}
         <Strip {...strip} {warp}></Strip>
     {/each}
 </section>
+
+<style lang="scss">
+    .page {
+        transform: translate3d(0, calc(-100% - (var(--pageWidth) * 150 / 1200)), 0);
+
+        @media (min-width: 640px) {
+            transform: translate3d(0, -100%, 0)
+        }
+    }
+</style>
