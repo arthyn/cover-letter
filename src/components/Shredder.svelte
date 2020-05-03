@@ -60,7 +60,7 @@
     }
 
     const shredOptions = {
-        delay: 1000,
+        delay: mobile ? 5000 : 1000,
         duration: 7500,
         easing: 'linear',
         fill: 'forwards'
