@@ -9,6 +9,7 @@ module.exports = {
     production &&
       purgecss({
         content: ['./**/*.html', './**/*.svelte'],
+        rejected: true,
         defaultExtractor: content => {
           const regExp = new RegExp(/[A-Za-z0-9-_:/]+/g);
 
@@ -29,7 +30,8 @@ module.exports = {
 
           return matchedTokens;
         },
-        whitelistPatterns: [/svelte-/]
-      })
+        whitelistPatterns: [/svelte-/, /:global/]
+      }),
+    require('postcss-reporter')
   ]
 };

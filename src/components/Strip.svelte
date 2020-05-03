@@ -53,7 +53,7 @@
 {/if}
 
 <style>
-    :global(.strip-container) {
+    .strip-container {
         position: absolute;
         top: 0;
         left: 0;
