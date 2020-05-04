@@ -1,14 +1,13 @@
 <script>
     import { generateTemplateLetter } from '../utils/api'
     import { debug } from '../utils/settings'
-    import { letterText, shredderElement, theirName, status, statusTypes } from '../utils/stores'
+    import { letterText, theirName, status, statusTypes } from '../utils/stores'
 
     let job = debug ? 'Software Developer' : '';
     let company = debug ? 'Modern Digital' : '';
 
     function generate() {
         $letterText = generateTemplateLetter(job || 'Software Developer', company || 'Modern Digital');
-        debug && console.log($shredderElement);
         $status = statusTypes.shredder;
     }
 

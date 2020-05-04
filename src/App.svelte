@@ -1,6 +1,6 @@
 <script>
-    import { paperPosition, enableVibration, status, statusTypes } from './utils/stores';
-    import { shredderWidth, debug } from './utils/settings';
+    import { enableVibration, status, statusTypes, animate, paperDistance, shreddedPaperDistance, settings, windowWidth } from './utils/stores';
+    import { onMount } from 'svelte'
     import { fade, fly, scale } from 'svelte/transition'
     import Paper from './components/Paper.svelte'
     import Shredder from './components/Shredder.svelte'
@@ -8,11 +8,19 @@
     import LetterGenerator from './components/LetterGenerator.svelte'
     import ActualLetter from './components/ActualLetter.svelte'
 
+    let { shredderWidth, debug, mobile } = $settings;
     let warp = false;
     let container;
     let flyIn = {
         duration: 1500,
         y: window.innerHeight,
+    }
+
+    const shredOptions = {
+        delay: $windowWidth < mobile ? 3000 : 1000,
+        duration: 7500,
+        easing: 'linear',
+        fill: 'forwards'
     }
 
     function toggleWarp() {
@@ -25,6 +33,10 @@
             setTimeout(() => container.scrollIntoView(true), 275);
     }
 
+    function adjustDuration(duration, paperDistance, shreddedPaperDistance) {
+        const ratio = paperDistance / shreddedPaperDistance;
+        return duration * ratio;
+    }
 </script>
 
 <main class="relative w-full min-h-screen" style="--pageWidth: {shredderWidth}vw" bind:this={container}>
@@ -39,10 +51,10 @@
     
     {#if $status === statusTypes.shredder || debug}
     <section class="screen" in:fly={flyIn} out:fade={{ duration: 250 }}>
-        <Shredder>
-            <Paper {warp}></Paper>
+        <Shredder {shredOptions}>
+            <Paper shredOptions={{ ...shredOptions, duration: adjustDuration(shredOptions.duration, $paperDistance, $shreddedPaperDistance)}} {warp}></Paper>
             <div slot="bottom">
-                <ShreddedPaper {warp} stripCount="20"></ShreddedPaper>
+                <ShreddedPaper {shredOptions} {warp} stripCount="20"></ShreddedPaper>
             </div>
         </Shredder>
     </section>
@@ -54,10 +66,6 @@
     {/if}
 
     <div class="controls" class:hidden={!debug}>
-        <div>
-            <label for="paperPosition" class="text-white">Paper Position</label>
-            <input id="paperPosition" type="range" max="200" bind:value={$paperPosition} />
-        </div>
         <div>
             <input id="enableVibration" type="checkbox" bind:checked={$enableVibration} />
             <label for="enableVibration" class="text-white">Enable Vibration</label>

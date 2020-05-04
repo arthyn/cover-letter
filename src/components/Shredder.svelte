@@ -1,113 +1,39 @@
 <script>
     import { onMount } from 'svelte'
     import { fly } from 'svelte/transition'
-    import { viewWidth, viewHeight, pageOuterMarginRatio, mobile, debug } from '../utils/settings'
     import { 
-        enableVibration, 
-        shredderElement, 
-        paperElement, 
-        shreddedPaperElement,
+        enableVibration,
+        animate,
         status,
-        statusTypes
+        statusTypes,
+        settings, 
+        windowWidth
     } from '../utils/stores'
 
-    let topHeight = mobile ? 75 : 50;
-    let bottomHeight = mobile ? 300 : 150;
-    let edge = mobile ? 10 : 5;
-    let halfEdge = edge / 2;
-    let outsideWidth = viewWidth - edge;
-    let slotOffset = mobile ? 25 : 50;
-    let slotHeight = mobile ? 150 : 50;
-    let slotWidth = viewWidth - (2 * (edge + slotOffset));
+    export let shredOptions;
+    let { viewWidth, viewHeight, pageOuterMarginRatio, debug, mobile } = $settings;
+    let topHeight,
+        bottomHeight,
+        edge,
+        halfEdge,
+        outsideWidth,
+        slotOffset,
+        slotHeight,
+        slotWidth;
+
+    $: topHeight = $windowWidth < mobile ? 75 : 50;
+    $: bottomHeight = $windowWidth < mobile ? 300 : 150;
+    $: edge = $windowWidth < mobile ? 10 : 5;
+    $: halfEdge = edge / 2;
+    $: outsideWidth = viewWidth - edge;
+    $: slotOffset = $windowWidth < mobile ? 25 : 50;
+    $: slotHeight = $windowWidth < mobile ? 150 : 50;
+    $: slotWidth = viewWidth - (2 * (edge + slotOffset));
 
     function vibrateValue(raw) {
         const dir = raw % 2 ? 1 : -1;
         const rotateValue = Math.random();
         return $enableVibration ? dir * rotateValue : 0;
-    }
-
-    let container;
-    let paperAnimation;
-    let shreddedAnimation;
-    let dropAnimation;
-    let containerHeight = 0;
-    let offset;
-
-    $: containerHeight = container ? container.offsetHeight : 0;
-    $: offset = window.innerWidth * pageOuterMarginRatio / 100;
-
-    const paperKeyframes = {
-        transform: [`translate3d(0, calc(100% + ${pageOuterMarginRatio}vw), 0)`] //`translate3d(0, calc(0% + ${pageOuterMarginRatio}vw), 0)`, 
-    }
-
-    const shredKeyFrames = {
-        transform: [`translate3d(0, ${-1.5 * pageOuterMarginRatio}vw, 0)`]
-    }
-
-    function getPaperDistance() {
-        return containerHeight;
-    }
-
-    function getShreddedDistance() {
-        let base = containerHeight - (1.5 * offset);
-        let boxAdjustment = window.innerWidth * .9 * 150 / 1200;
-        return mobile ? base + boxAdjustment : base;
-    }
-
-    function adjustDuration(duration) {
-        const ratio = getPaperDistance() / getShreddedDistance();
-        return duration * ratio;
-    }
-
-    const shredOptions = {
-        delay: mobile ? 3000 : 1000,
-        duration: 7500,
-        easing: 'linear',
-        fill: 'forwards'
-    }
-
-    function shred() {
-        let paperDuration = adjustDuration(shredOptions.duration);
-        let paperOptions = {
-            ...shredOptions,
-            duration: paperDuration
-        }
-        debug && console.log(getShreddedDistance() / shredOptions.duration, getPaperDistance() / paperDuration)
-
-        paperAnimation = $paperElement.animate(paperKeyframes, paperOptions);
-        shreddedAnimation = $shreddedPaperElement.animate(shredKeyFrames, shredOptions);
-
-        return shreddedAnimation;
-    }
-
-    function unshred() {
-        dropAnimation.reverse()
-        setTimeout(() => {
-            paperAnimation.reverse();
-            shreddedAnimation.reverse();
-        }, dropAnimationOptions.duration - 250);
-    }
-
-    const dropAnimationOptions = {
-        duration: 1000,
-        easing: 'cubic-bezier(0.32, 0, 0.67, 0)',
-        fill: 'forwards'
-    }
-
-    function drop() {
-        return $shreddedPaperElement.animate({
-            transform: ['translate3d(0, 150%, 0)'] //`translate3d(0, -${1.5 * pageOuterMarginRatio}vw, 0)`,
-        }, dropAnimationOptions);
-    }
-
-    function runFullAnimation() {
-        shred().finished.then(() => {});
-        setTimeout(() => {
-            dropAnimation = drop();
-            dropAnimation.finished.then(() => {
-                $status = statusTypes.letter
-            });
-        }, shredOptions.delay + shredOptions.duration - 100);
     }
 
     function scrollIntoView() {
@@ -128,19 +54,19 @@
             intersecting = entries[0].isIntersecting;
             if (intersecting && !debug) {
                 setTimeout(scrollIntoView, shredOptions.delay + (shredOptions.duration / 2));
-                runFullAnimation();
+                animate.set(true);
                 observer.unobserve(target);
             }
         }, {
-            threshold: .5
+            threshold: .7
         });
 
         observer.observe(target);
     })
 </script>
 
-<div class="shredder svg-container" bind:this={$shredderElement}>
-    <div class="shredder-view shredder-view-top relative overflow-hidden z-40" class:overflow-visible={debug} bind:this={container}>
+<div class="shredder svg-container">
+    <div class="shredder-view shredder-view-top relative overflow-hidden z-40" class:overflow-visible={debug}>
         <slot></slot>
     </div>
     

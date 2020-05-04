@@ -1,9 +1,8 @@
 <script>
-    import { lines } from '../utils/stores'
+    import { lines, settings } from '../utils/stores'
     import { fly } from 'svelte/transition'
     import { quintIn, expoIn, elasticInOut } from 'svelte/easing'
     import { applyTopWarp } from '../utils/api'
-    import { pageWidth, viewWidth, viewHeight } from '../utils/settings'
 
     export let warp;
     export let x = 0;
@@ -11,13 +10,13 @@
     export let height = 1200;
     export let width = 50;
 
+    let { viewWidth, viewHeight } = $settings;
     let id = Math.round(x);
     let transition = false;
     const dir = Math.round(Math.random()) ? 1 : -1;
     const effect = Math.random() + .3;
     const multiplier = dir * effect;
     let params;
-    //console.log(multiplier)
 
     $: {
         params = {

@@ -1,5 +1,6 @@
-import { fontSize, textAreaWidth, innerMargin, debug } from './settings'
-import { writable, derived } from 'svelte/store'
+import throttle from 'lodash.throttle';
+import { getSettings, debug } from './settings'
+import { writable, readable, derived } from 'svelte/store'
 import opentype from 'opentype.js'
 import { generateTemplateLetter } from './api'
 import { breakTextIntoLines, distributeLinesVertically } from './text-wrapper'
@@ -11,30 +12,38 @@ export const statusTypes = {
 }
 
 export const status = writable(statusTypes.intro);
+export const animate = writable(false);
 
 export const theirName = writable(debug ? 'Hunter' : '');
 
-export const shredderElement = writable();
-export const paperElement = writable();
-export const shreddedPaperElement = writable();
+export const paperDistance = writable();
+export const shreddedPaperDistance = writable();
 
-export const paperPosition = writable(0);
+export const windowWidth = readable(window.innerWidth, set => {
+    const setWidth = throttle(() => set(window.innerWidth), 50);
+    window.addEventListener('resize', setWidth);
+
+    return () => window.removeEventListener('resize', setWidth);
+});
+
+export const settings = derived(windowWidth, ($windowWidth) => getSettings($windowWidth));
 
 export const letterText = writable(generateTemplateLetter('Software Developer', 'Modern Digital'))
 
-export const lines = derived(letterText, ($letterText, set) => {
+export const lines = derived([letterText, settings], ([$letterText, $settings], set) => {
     opentype.load('FiraCode-Regular.ttf', (err, font) => {
         if (err || !$letterText) {
             console.log(err);
             return;
         }
 
-        let lines = breakIntoLines(font, $letterText);
+        let lines = breakIntoLines(font, $letterText, $settings);
         set(lines);
     });
 }, [])
 
-function breakIntoLines(font, text) {
+function breakIntoLines(font, text, settings) {
+    let { fontSize, textAreaWidth, innerMargin } = settings;
     let path;
     let lines = [];
     let zeroPath = font.getPath('0', 0, 0, fontSize);
