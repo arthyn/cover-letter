@@ -18,18 +18,18 @@
         Please introduce yourself! You are
         <div class="relative inline leading-none">
             <input id="yourName" class="control w-40 sm:w-48 -mb-2 sm:py-1 px-2 text-center border-b-2" type="text" required bind:value={$theirName}>
-            <label for="yourName" class="absolute left-0 inline-block w-full text-center font-semibold opacity-75">your name</label>
-        </div>, a hiring manager at,
+            <label for="yourName" class="absolute left-0 inline-block w-full text-center font-semibold opacity-75">your name</label><span class="-ml-1">,</span>
+        </div> a hiring manager at,
         <div class="relative inline leading-none">
             <input id="company" class="control w-40 sm:w-48 -mb-2 sm:py-1 px-2 text-center border-b-2" type="text" required bind:value={company}>
-            <label for="company" class="absolute left-0 inline-block w-full text-center font-semibold opacity-75">company</label>
-        </div>, looking to hire a
+            <label for="company" class="absolute left-0 inline-block w-full text-center font-semibold opacity-75">company</label><span class="-ml-1">,</span>
+        </div> looking to hire a
         <div class="relative inline leading-none">
             <input id="position" class="control w-48 sm:w-64 -mb-2 sm:py-1 px-2 text-center border-b-2" type="text" required bind:value={job}>
             <label for="position" class="absolute left-0 inline-block w-full text-center font-semibold opacity-75">the position</label>
         </div>.
     </div>
-    <button class="button control">See the letter</button>
+    <button class="button control">See my cover letter</button>
 </form>
 
 <style lang="scss">
