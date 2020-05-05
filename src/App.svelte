@@ -37,6 +37,23 @@
         const ratio = paperDistance / shreddedPaperDistance;
         return duration * ratio;
     }
+
+    function trackPageLoad() {
+        setTimeout(() => {
+            const perfData = window.performance.timing; 
+            const pageLoadTime = perfData.loadEventEnd - perfData.navigationStart;
+            const renderTime = perfData.domComplete - perfData.domLoading;
+
+            console.log(`%cThis page loaded in: %c${pageLoadTime}ms`, 'font-size: 16px; line-height: 1.5;', 'font-size: 20px; font-weight: 700; color: #2634fc');
+            console.log(`%cThis page rendered in: %c${renderTime}ms`, 'font-size: 16px; line-height: 1.5;', 'font-size: 20px; font-weight: 700; color: #2634fc');
+            console.log('%cHey! Feel free to email me any questions about this page at %chunter@hmiller.dev', 'font-size: 16px; line-height: 1.5;', 'font-size: 16px; line-height: 1.5; font-weight: 700; color: #2634fc');
+        }, 0);
+    }
+
+    onMount(() => {
+        if ("performance" in window)
+            window.onload = trackPageLoad;
+    })
 </script>
 
 <main class="relative w-full min-h-screen" style="--pageWidth: {shredderWidth}vw" bind:this={container}>
