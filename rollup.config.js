@@ -5,6 +5,8 @@ import livereload from 'rollup-plugin-livereload';
 import { terser } from 'rollup-plugin-terser';
 import postcss from 'rollup-plugin-postcss';
 import autoPreprocess from 'svelte-preprocess';
+import babel from '@rollup/plugin-babel';
+import analyze from 'rollup-plugin-analyzer';
 
 const production = !process.env.ROLLUP_WATCH;
 
@@ -50,9 +52,16 @@ export default {
 		// browser on changes when not in production
 		!production && livereload('public'),
 
+		production && babel({
+			extensions: ['.js', '.mjs', '.html', '.svelte'],
+			include: ['src/**', 'node_modules/svelte/**'],
+			babelHelpers: 'bundled'
+		}),
+
 		// If we're building for production (npm run build
 		// instead of npm run dev), minify
-		production && terser()
+		production && terser(),
+		analyze()
 	],
 	watch: {
 		clearScreen: false
