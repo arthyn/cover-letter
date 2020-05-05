@@ -76,6 +76,8 @@
             {/each}
         </select>
     </div>
+
+    <footer class="absolute bottom-0 left-0 ml-2 sm:ml-8 md:ml-24 mb-4">&copy; 2020 <a class="hover:underline text-teal-300" href="https://hmiller.dev">Hunter Miller</a></footer>
 </main>
 
 <style lang="scss">

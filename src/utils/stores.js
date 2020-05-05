@@ -31,7 +31,7 @@ export const settings = derived(windowWidth, ($windowWidth) => getSettings($wind
 export const letterText = writable(generateTemplateLetter('Software Developer', 'Modern Digital'))
 
 export const lines = derived([letterText, settings], ([$letterText, $settings], set) => {
-    opentype.load('FiraCode-Regular.ttf', (err, font) => {
+    opentype.load('FiraCode-Regular-subset.zopfli.woff', (err, font) => {
         if (err || !$letterText) {
             console.log(err);
             return;
